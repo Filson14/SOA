@@ -18,9 +18,10 @@ import java.util.List;
 @Local(StudentsDAOInterface.class)
 public class StudentsDAO implements StudentsDAOInterface {
 
-    @PersistenceContext(unitName="primary")
+    @PersistenceContext(name="primary")
     protected EntityManager em;
 
+    /*
     public StudentsDAO(){
         //EntityManagerFactory emf = Persistence.createEntityManagerFactory("")
         EncjaStudent s1 = new EncjaStudent("filip", "pasternak", 250056);
@@ -31,7 +32,7 @@ public class StudentsDAO implements StudentsDAOInterface {
         em.persist(s2);
         em.persist(s3);
     }
-
+*/
 
     public EntityManager getEM(){
         return em;
@@ -80,7 +81,7 @@ public class StudentsDAO implements StudentsDAOInterface {
     }
 
     public List<EncjaStudent> getStudentsList(){
-        Query qry = em.createQuery("SELECT s FROM pl.edu.agh.kis.soa.rest.model.EncjaStudent s");
+        Query qry = em.createQuery("SELECT s FROM student s");
         return (List<EncjaStudent>)qry.getResultList();
     }
 }

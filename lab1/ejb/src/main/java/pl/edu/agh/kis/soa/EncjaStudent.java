@@ -3,13 +3,15 @@ package pl.edu.agh.kis.soa;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
  * Created by filson on 13.06.15.
  */
 
-@Entity(name="Student")
+@Entity(name="student")
+@Table(name="student")
 public class EncjaStudent implements Serializable{
 
     /*@Id

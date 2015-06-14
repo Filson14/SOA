@@ -2,6 +2,7 @@ package pl.edu.agh.kis.soa.rest;
 
 import pl.edu.agh.kis.soa.EncjaStudent;
 import pl.edu.agh.kis.soa.StudentsDAO;
+import pl.edu.agh.kis.soa.StudentsDAOInterface;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -18,7 +19,7 @@ import java.util.List;
 @Path("RestJPA")
 public class StudentResource {
     @EJB
-    private StudentsDAO studentDao;
+    private StudentsDAOInterface studentDao;
 
     public StudentResource(){
 
@@ -46,7 +47,7 @@ public class StudentResource {
     @Produces(MediaType.TEXT_PLAIN)
     public Response getAllStudents(){
         List<EncjaStudent> list = studentDao.getStudentsList();
-        StringBuilder resp = new StringBuilder("Lista studentow: ");
+        StringBuilder resp = new StringBuilder("Lista studentow: \n");
         for(EncjaStudent s : list){
             resp.append(s.toString());
         }
@@ -64,22 +65,26 @@ public class StudentResource {
     }
 
     @PUT
-    @Path("editWithId/{numerAlbumu}/{imie}/{nazwisko}")
-    public Response editStudent(@PathParam("numerAlbumu") int numerAlbumu, @PathParam("imie") String imie, @PathParam("nazwisko") String nazwisko){
-        if(studentDao.editStudent(numerAlbumu, imie, nazwisko))
+    @Path("edit/{numerAlbumu}")
+    public Response editStudent(@PathParam("numerAlbumu") int numerAlbumu, @QueryParam("imie") String imie, @QueryParam("nazwisko") String nazwisko){
+        EncjaStudent s = studentDao.getStudent(numerAlbumu);
+        if(s != null) {
+            if (imie != null && imie.length() != 0) s.setImie(imie);
+            if (nazwisko != null && nazwisko.length() != 0) s.setNazwisko(nazwisko);
+            studentDao.editStudent(s);
             return Response.ok("Sukces", MediaType.TEXT_PLAIN).build();
-        else
+        }else {
             return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 
     @DELETE
     @Path("delete/{id}")
     public Response deleteStudent(@PathParam("id") int numerAlbumu){
         if(studentDao.deleteStudent(numerAlbumu)){
-            return Response.ok().build();
+            return Response.ok("Usunieto studenta " + numerAlbumu, MediaType.TEXT_PLAIN).build();
         }else{
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
     }
 }
