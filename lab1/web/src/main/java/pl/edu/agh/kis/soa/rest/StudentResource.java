@@ -60,8 +60,10 @@ public class StudentResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addNewStudent(@PathParam("numerAlbumu") int numerAlbumu, @PathParam("imie") String imie, @PathParam("nazwisko") String nazwisko){
         EncjaStudent s = new EncjaStudent(imie, nazwisko, numerAlbumu);
-        studentDao.addStudent(s);
-        return Response.ok(s, MediaType.APPLICATION_JSON).build();
+        if(studentDao.addStudent(s))
+            return Response.ok(s, MediaType.APPLICATION_JSON).build();
+        else
+            return Response.status(Response.Status.CONFLICT).build();
     }
 
     @PUT

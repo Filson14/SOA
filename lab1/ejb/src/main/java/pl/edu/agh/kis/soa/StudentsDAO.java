@@ -4,6 +4,7 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -42,8 +43,15 @@ public class StudentsDAO implements StudentsDAOInterface {
         this.em = em;
     }
 
-    public void addStudent(EncjaStudent student){
-        em.persist(student);
+    public boolean addStudent(EncjaStudent student){
+        EncjaStudent s = em.find(EncjaStudent.class, student.getNumerAlbumu());
+        if(s == null) {
+            em.persist(student);
+            return true;
+        }else{
+            return false;
+        }
+
     }
 
     public boolean deleteStudent(int id){

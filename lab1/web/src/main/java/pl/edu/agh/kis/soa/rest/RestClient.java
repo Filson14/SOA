@@ -19,6 +19,7 @@ import java.io.IOException;
  */
 public class RestClient {
     public static final String REST_URL = "http://localhost:8080/lab1-web/test/";
+    public static final String REST_URL_JPA = "http://localhost:8080/lab1-web/RestJPA/";
 
     public static void handleResponse(ClientResponse response){
         if(response.getStatus() != 200){
@@ -32,7 +33,41 @@ public class RestClient {
         Client client = Client.create();
         WebResource webResource;
         ClientResponse response;
+/*
+        webResource = client
+                .resource(REST_URL_JPA + "addNew/250056/filip/pasternak");
+        webResource.post();
 
+        webResource = client
+                .resource(REST_URL_JPA + "addNew/123456/jan/nowak");
+        webResource.post();
+
+        webResource = client
+                .resource(REST_URL_JPA + "addNew/654321/stanislaw/kowalski");
+        webResource.post();
+*/
+        webResource = client.resource(REST_URL_JPA + "getAll");
+        response = webResource.get(ClientResponse.class);
+        handleResponse(response);
+
+        webResource = client
+                .resource(REST_URL_JPA + "edit/654321?imie=staszek");
+        webResource.put();
+
+        webResource = client
+                .resource(REST_URL_JPA + "delete/123456");
+        webResource.delete();
+
+        webResource = client.resource(REST_URL_JPA + "getAll");
+        response = webResource.get(ClientResponse.class);
+        handleResponse(response);
+
+        webResource = client.resource(REST_URL_JPA + "getStudent/250056");
+        response = webResource.get(ClientResponse.class);
+        handleResponse(response);
+
+
+        /* KOD KLIENTA Z ZALICZENIA TEMATU REST
         // GET z QueryParam
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add("name", "filip");
@@ -147,6 +182,6 @@ public class RestClient {
             e.printStackTrace();
         }
         ///////////////////////////////////////////////////////////////////////////////////////
-
+        */
     }
 }
